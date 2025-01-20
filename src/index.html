@@ -8,12 +8,42 @@
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    <load src="./partials/header.html" icon-path="img/sprite.svg#logo" />
-
+   
     <main>
-      <!-- Loads the specified .html file -->
-      <load src="./partials/vite-promo.html" />
-      <load src="./partials/badges.html" />
+      <section>
+        <input type="text" class="user-request" />
+        <button type="button" class="btn-request">Search</button>
+      </section>
+
+      <section class="imges">
+<ul class="card-list">
+  <li class="card">
+    <img class="card-img" src="" alt="">
+    <div class="card-body">
+      <ul class="card-value-list">
+        <li class="card-value">
+          <h3>Likes</h3>
+          <p class="likes-value"></p>
+        </li>
+        <li class="card-value">
+          <h3>Views</h3>
+          <p class="views-value"></p>
+        </li>
+        <li class="card-value">
+          <h3>Comments</h3>
+          <p class="comments-value"></p>
+        </li>
+        <li class="card-value">
+          <h3>Downloads</h3>
+          <p class="downloads-value"></p>
+        </li>
+      </ul>
+    </div>
+  </li>
+</ul>
+      </section>
+
+     
     </main>
 
     <load src="./partials/footer.html" />
