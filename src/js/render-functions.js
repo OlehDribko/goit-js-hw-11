@@ -1,16 +1,31 @@
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+
 import { fetchAllImages } from './pixabay-api';
 
 const refs = {
   btnRequest: document.querySelector('.btn-request'),
   input: document.querySelector('.user-request'),
-  galery: document.querySelector('.card-list'),
+  gallery: document.querySelector('.card-list'),
+  loader: document.querySelector('.loader'),
 };
 
 export const createMarkup = results => {
-  return results.map(item => {
-    const { tags, webformatURL, likes, comments, views, downloads } = item;
-    const card = `<li class="card">
-    <img class="card-img" src="${webformatURL}" alt="${tags}">
+  return results
+    .map(item => {
+      const {
+        tags,
+        webformatURL,
+        likes,
+        comments,
+        views,
+        downloads,
+        largeImageURL,
+      } = item;
+      const card = `<li class="card">
+     <a href="${largeImageURL}" class="gallery-item">
+          <img class="card-img" src="${webformatURL}" alt="${tags}" />
+        </a>
     <div class="card-body">
       <ul class="card-value-list">
         <li class="card-value">
@@ -33,20 +48,53 @@ export const createMarkup = results => {
     </div>
   </li>`;
 
-    return card;
-  }).join('');
+      return card;
+    })
+    .join('');
+};
+//*** SimpleLightbox */
+const lightbox = new SimpleLightbox('.gallery-item', {
+    captionsData: 'alt',
+    captionDelay: 250,
+  });
+
+//***   luader ***/
+
+const showLoader = () => {
+  refs.loader.style.display = 'block';
 };
 
+const hideLoader = () => {
+  refs.loader.style.display = 'none';
+  setTimeout(() => {
+    refs.loader.style.display = 'none';
+  }, 3000);
+};
+
+// ***** event ****//
+
 refs.btnRequest.addEventListener('click', event => {
-    const userChoice = refs.input.value.trim();
-    
+  const userChoice = refs.input.value.trim();
+  event.preventDefault();
+
+  if (!userChoice) {
+    return;
+  }
+  refs.gallery.innerHTML = '';
+
+  showLoader();
+
   fetchAllImages(userChoice)
+
     .then(images => {
       const markup = createMarkup(images);
-refs.galery.innerHTML = markup;
+      refs.gallery.innerHTML = markup;
+
+      
+
+      lightbox.refresh();
     })
-    .catch();
-
-
-
+    .catch(err => console.error('Помилка:', err)).finally(() =>{
+        hideLoader();
+    });
 });
