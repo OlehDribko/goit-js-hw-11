@@ -2,17 +2,11 @@
 
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-import iziToast from "izitoast";
-import "izitoast/dist/css/iziToast.min.css";
-import {fetchAllImages} from './pixabay-api'
 
 
-const refs = {
-  btnRequest: document.querySelector('.searchForm'),
-  input: document.querySelector('.user-request'),
-  gallery: document.querySelector('.card-list'),
-  loader: document.querySelector('.loader'),
-};
+const loader = document.querySelector('.loader');
+
+
 
 
 export const createMarkup = results => {
@@ -58,7 +52,7 @@ export const createMarkup = results => {
     .join('');
 };
 //*** SimpleLightbox */
-const lightbox = new SimpleLightbox('.gallery-item', {
+export const lightbox = new SimpleLightbox('.gallery-item', {
     captionsData: 'alt',
     captionDelay: 250,
     
@@ -66,58 +60,14 @@ const lightbox = new SimpleLightbox('.gallery-item', {
 
 //***   luader ***/
 
-const showLoader = () => {
-  refs.loader.style.display = 'block';
+export const showLoader = () => {
+  loader.style.display = 'block';
 };
 
-const hideLoader = () => {
-  refs.loader.style.display = 'none';
+export const hideLoader = () => {
+  loader.style.display = 'none';
   setTimeout(() => {
-    refs.loader.style.display = 'none';
+    loader.style.display = 'none';
   }, 3000);
 };
 
-// ***** event ****//
-
-refs.btnRequest.addEventListener('submit', event => {
-  const userChoice = refs.input.value.trim();
-  
-  event.preventDefault();
-
-  if (!userChoice) {
-    iziToast.show({
-      title: 'Не знайдено',
-      message: 'Введіть значення',
-      backgroundColor: 'red',
-      position: 'topRight',
-      
-    })
-    return;
-  }
-  refs.gallery.innerHTML = '';
-
-  showLoader();
-
-  fetchAllImages(userChoice)
-
-    .then(images => {
-      const markup = createMarkup(images);
-      if(markup === ''){
-        iziToast.show({
-          title: 'Не знайдено',
-          message: 'Задані значення відсутні',
-          backgroundColor: 'red',
-          position: 'topRight',
-          
-        })
-      };
-      refs.gallery.innerHTML = markup;
-
-      
-
-      lightbox.refresh();
-    })
-    .catch(err => console.error('Помилка:', err)).finally(() =>{
-        hideLoader();
-    });
-});
